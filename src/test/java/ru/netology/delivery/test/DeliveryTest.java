@@ -35,10 +35,14 @@ class DeliveryTest {
         $("[data-test-id='phone'] input").setValue(validUser.getPhone());
         $("[data-test-id='agreement']").click();
         $$("button").find(exactText("Запланировать")).click();
-        $(withText("Необходимо подтверждение")).shouldBe(visible, Duration.ofSeconds(10));
-        $$("button").find(exactText("Перепланировать")).click();
-        $(withText("Успешно!")).shouldBe(visible, Duration.ofSeconds(10));
-        $(".notification__content").shouldHave(exactText("Встреча успешно запланирована на " + firstMeetingDate)).shouldBe(visible, Duration.ofSeconds(15));
-
+        $("[data-test-id='success-notification']  .notification__title").shouldBe(visible, Duration.ofSeconds(10)).shouldHave(exactText("Успешно!"));
+        $("[data-test-id='success-notification']  .notification__content").shouldBe(visible, Duration.ofSeconds(10)).shouldHave(exactText("Встреча успешно запланирована на " + firstMeetingDate));
+        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT,Keys.HOME),Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(secondMeetingDate);
+        $$("button").find(exactText("Запланировать")).click();
+        $("[data-test-id='replan-notification']  .notification__title").shouldBe(visible, Duration.ofSeconds(10)).shouldHave(exactText("Необходимо подтверждение"));
+        $$("[data-test-id='replan-notification'] button").find(exactText("Перепланировать")).click();
+        $("[data-test-id='success-notification']  .notification__title").shouldBe(visible, Duration.ofSeconds(10)).shouldHave(exactText("Успешно!"));
+        $("[data-test-id='success-notification']  .notification__content").shouldBe(visible, Duration.ofSeconds(10)).shouldHave(exactText("Встреча успешно запланирована на " + secondMeetingDate));
     }
 }
